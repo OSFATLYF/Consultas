@@ -93,8 +93,7 @@ button:hover{background:#1565c0;}
 </style>
 </head>
 <body>
-  
-<img src="https://sirelyf.org/wp-content/uploads/2023/04/OSFATLYF-salud-luz-y-fuerza-web-SiReLyF.png" class="banner" alt="Banner OSFATLYF">
+<img src="img/1_Baner_OSFATLYF.jpg" class="banner" alt="Banner OSFATLYF">  
 
 <div class="contenedor">
     <h1>Solicitud orden de consulta</h1>
@@ -124,10 +123,11 @@ button:hover{background:#1565c0;}
             <label for="localidad">Seleccione opción:</label>
             <select id="localidad" onchange="evaluarLocalidad()">
                 <option value="" disabled selected>-- Seleccione una opción --</option>
-                <option value="capital">Salta Capital</option>
-                <option value="guemes">General Güemes</option>
                 <option value="anta">Anta</option>
+              	<option value="guemes">General Güemes</option>
                 <option value="metan">Metán</option>
+              	<option value="oran">Orán</option>
+              	<option value="capital">Salta Capital</option>
                 <option value="tartagal">Tartagal</option>
                 <option value="otra">❓ No sé / Otra localidad</option>
             </select>
@@ -218,101 +218,55 @@ button:hover{background:#1565c0;}
 </div>
 <script>
 const URL_AFILIADOS = "https://script.google.com/macros/s/AKfycbxnC103OPZbsknMUpztQYZuQbZZTzyCkzgbO6GzkFd0FcvRxk1i8fw0yyUhxDATuLcr/exec";
-const URL_GESTION = "https://script.google.com/macros/s/AKfycbydt1EzjFSc-bl386-D_N0gq91lzRzaivUKTky96jlPt5KN8BW8tBowuhUhEovwwDFJ/exec";  
+const URL_GESTION = "https://script.google.com/macros/s/AKfycbydt1EzjFSc-bl386-D_N0gq91lzRzaivUKTky96jlPt5KN8BW8tBowuhUhEovwwDFJ/exec";
 
 const baseDatosSalta = {
-    "Anta": {
-        municipios: ["APOLINARIO SARAVIA", "EL QUEBRACHAL", "GENERAL PIZARRO", "JOAQUIN V. GONZALEZ", "LAS LAJITAS"],
-        prestadorDefecto: ["CIRCULO MEDICO DE ANTA"]
-    },
-    "Cachi": {
-        municipios: ["CACHI", "PAYOGASTA"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]
-    },
-    "Cafayate": {
-        municipios: ["CAFAYATE"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]
-    },
-    "Capital": {
-        municipios: ["SALTA", "SAN LORENZO"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA", "SAMOBA SALUD SA", "Asociación Salteña de Ortopedia y Traumatología"]
-    },
-    "Cerrillos": {
-        municipios: ["CERRILLOS", "LA MERCED"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]
-    },
-    "Chicoana": {
-        municipios: ["CHICOANA", "EL CARRIL"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]
-    },
-    "General Güemes": {
-        municipios: ["CAMPO SANTO", "EL BORDO", "GENERAL GÜEMES"],
-        prestadorDefecto: ["SAMOBA SALUD SA"]
-    },
-    "Guachipas": {
-        municipios: ["GUACHIPAS"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]
-    },
-    "Iruya": {
-        municipios: ["CAÑAS (LAS CAÑAS)", "IRUYA"],
-        prestadorDefecto: ["CIRCULO MEDICO DE TARTAGAL", "CLINICA SAN ANTONIO"]
-    },
-    "La Caldera": {
-        municipios: ["LA CALDERA", "VAQUEROS"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]
-    },
-    "La Candelaria": {
-        municipios: ["EL JARDIN", "EL TALA", "LA CANDELARIA"],
-        prestadorDefecto: ["CIRCULO MEDICO METAN"]
-    },
-    "La Poma": {
-        municipios: ["LA POMA"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]
-    },
-    "La Viña": {
-        municipios: ["CORONEL MOLDES", "LA VIÑA"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]
-    },
-    "Los Andes": {
-        municipios: ["SAN ANTONIO DE LOS COBRES", "TOLAR GRANDE"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]
-    },
-    "Metán": {
-        municipios: ["EL GALPON", "RIO PIEDRAS", "SAN JOSE DE METAN"],
-        prestadorDefecto: ["CIRCULO MEDICO METAN"]
-    },
-    "Molinos": {
-        municipios: ["MOLINOS", "SECLANTAS"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]
-    },
-    "Orán": {
-        municipios: ["AGUAS BLANCAS", "COLONIA SANTA ROSA", "HIPOLITO YRIGOYEN", "PICHANAL", "SAN RAMON DE LA NUEVA ORAN", "URUNDEL"],
-        prestadorDefecto: ["CIRCULO MEDICO DE TARTAGAL", "CLINICA SAN ANTONIO"]
-    },
-    "Rivadavia": {
-        municipios: ["RIVADAVIA BANDA NORTE", "RIVADAVIA BANDA SUR", "SANTA VICTORIA ESTE"],
-        prestadorDefecto: ["CIRCULO MEDICO DE TARTAGAL", "CLINICA SAN ANTONIO"]
-    },
-    "Rosario de la Frontera": {
-        municipios: ["EL POTRERO", "ROSARIO DE LA FRONTERA"],
-        prestadorDefecto: ["CIRCULO MEDICO METAN"]
-    },
-    "Rosario de Lerma": {
-        municipios: ["CAMPO QUIJANO", "ROSARIO DE LERMA"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]
-    },
-    "San Carlos": {
-        municipios: ["ANGASTACO", "ANIMANA", "SAN CARLOS"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]
-    },
-    "San Martín": {
-        municipios: ["AGUARAY", "EMBARCACION", "GENERAL BALLIVIAN", "GENERAL MOSCONI", "SALVADOR MAZZA", "TARTAGAL"],
-        prestadorDefecto: ["CIRCULO MEDICO DE TARTAGAL", "CLINICA SAN ANTONIO"]
-    },
-    "Santa Victoria": {
-        municipios: ["LOS TOLDOS", "NAZARENO", "SANTA VICTORIA OESTE"],
-        prestadorDefecto: ["CIRCULO MEDICO DE TARTAGAL", "CLINICA SAN ANTONIO"]
-    }
+    "Anta": { municipios: ["APOLINARIO SARAVIA", "EL QUEBRACHAL", "GENERAL PIZARRO", "JOAQUIN V. GONZALEZ", "LAS LAJITAS"],
+        prestadorDefecto: ["CIRCULO MEDICO DE ANTA"]},
+    "Cachi": { municipios: ["CACHI", "PAYOGASTA"],
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]},
+    "Cafayate": { municipios: ["CAFAYATE"],
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]},
+    "Capital": { municipios: ["SALTA", "SAN LORENZO"],
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA", "SAMOBA SALUD SA", "Asociación Salteña de Ortopedia y Traumatología"] },
+    "Cerrillos": { municipios: ["CERRILLOS", "LA MERCED"],
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"] },
+    "Chicoana": { municipios: ["CHICOANA", "EL CARRIL"],
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"] },
+    "General Güemes": { municipios: ["CAMPO SANTO", "EL BORDO", "GENERAL GÜEMES"],
+        prestadorDefecto: ["SAMOBA SALUD SA"] },
+    "Guachipas": { municipios: ["GUACHIPAS"],
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"] },
+    "Iruya": { municipios: ["CAÑAS (LAS CAÑAS)", "IRUYA"],
+        prestadorDefecto: ["CIRCULO MEDICO DE TARTAGAL", "CLINICA SAN ANTONIO"] },
+    "La Caldera": { municipios: ["LA CALDERA", "VAQUEROS"],
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"] },
+    "La Candelaria": { municipios: ["EL JARDIN", "EL TALA", "LA CANDELARIA"],
+        prestadorDefecto: ["CIRCULO MEDICO METAN"] },
+    "La Poma": { municipios: ["LA POMA"],
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"] },
+    "La Viña": { municipios: ["CORONEL MOLDES", "LA VIÑA"],
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"] },
+    "Los Andes": { municipios: ["SAN ANTONIO DE LOS COBRES", "TOLAR GRANDE"],
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"] },
+    "Metán": { municipios: ["EL GALPON", "RIO PIEDRAS", "SAN JOSE DE METAN"],
+        prestadorDefecto: ["CIRCULO MEDICO METAN"] },
+    "Molinos": { municipios: ["MOLINOS", "SECLANTAS"],
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"] },
+    "Orán": { municipios: ["AGUAS BLANCAS", "COLONIA SANTA ROSA", "HIPOLITO YRIGOYEN", "PICHANAL", "SAN RAMON DE LA NUEVA ORAN", "URUNDEL"],
+        prestadorDefecto: ["PRESTADOR ABIERTO SALTA"] },
+    "Rivadavia": { municipios: ["RIVADAVIA BANDA NORTE", "RIVADAVIA BANDA SUR", "SANTA VICTORIA ESTE"],
+        prestadorDefecto: ["CIRCULO MEDICO DE TARTAGAL", "CLINICA SAN ANTONIO"] },
+    "Rosario de la Frontera": { municipios: ["EL POTRERO", "ROSARIO DE LA FRONTERA"],
+        prestadorDefecto: ["CIRCULO MEDICO METAN"] },
+    "Rosario de Lerma": { municipios: ["CAMPO QUIJANO", "ROSARIO DE LERMA"],
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"] },
+    "San Carlos": { municipios: ["ANGASTACO", "ANIMANA", "SAN CARLOS"],
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA"] },
+    "San Martín": { municipios: ["AGUARAY", "EMBARCACION", "GENERAL BALLIVIAN", "GENERAL MOSCONI", "SALVADOR MAZZA", "TARTAGAL"],
+        prestadorDefecto: ["CIRCULO MEDICO DE TARTAGAL", "CLINICA SAN ANTONIO"] },
+    "Santa Victoria": { municipios: ["LOS TOLDOS", "NAZARENO", "SANTA VICTORIA OESTE"],
+        prestadorDefecto: ["CIRCULO MEDICO DE TARTAGAL", "CLINICA SAN ANTONIO"] }
 };
 
 const prestadoresFijos = {
@@ -320,6 +274,7 @@ const prestadoresFijos = {
     guemes: ["SAMOBA SALUD SA"],
     anta: ["CIRCULO MEDICO DE ANTA"],
     metan: ["CIRCULO MEDICO METAN"],
+  	oran: ["PRESTADOR ABIERTO SALTA"],
     tartagal: ["CIRCULO MEDICO DE TARTAGAL", "CLINICA SAN ANTONIO"]
 };
 
@@ -404,9 +359,12 @@ function sugerirPorMunicipio() {
     const muni = document.getElementById('municipio').value;
     if (!depto || !muni) return;
     let prestadoresSugeridos = [...baseDatosSalta[depto].prestadorDefecto];
-
     if (depto === "Rivadavia" && muni === "RIVADAVIA BANDA SUR") {
         prestadoresSugeridos = ["CIRCULO MEDICO DE ANTA"];
+    } else if (depto === "Rivadavia" && muni === "RIVADAVIA BANDA NORTE") {
+        prestadoresSugeridos = ["PRESTADOR ABIERTO SALTA"];
+    } else if (depto === "San Martín" && (muni === "EMBARCACION" || muni === "GENERAL BALLIVIAN")) {
+        prestadoresSugeridos = ["PRESTADOR ABIERTO SALTA"];
     }
     mostrarPrestadores(prestadoresSugeridos, true);
 }
@@ -427,16 +385,14 @@ function mostrarPrestadores(lista, esSugerido) {
         radio.value = prestador;
         radio.onchange = function() { prestadorSeleccionado = this.value; };
         let nombreVisual = prestador;
-        if (prestador === "SAMOBA SALUD SA") { nombreVisual = "INSTITUTO MEDICO SAVIA SALUD"; }        
+        if (prestador === "SAMOBA SALUD SA") { nombreVisual = "INSTITUTO MEDICO SAVIA SALUD"; 
+        } else if (prestador === "PRESTADOR ABIERTO SALTA") { nombreVisual = "CIRCULO MEDICO DE ORAN"; }        
         label.appendChild(radio);
         label.appendChild(document.createTextNode(nombreVisual));
         contenedor.appendChild(label);
     });
-    if (esSugerido) {
-        tag.classList.remove('oculto');
-    } else {
-        tag.classList.add('oculto');
-    }
+    if (esSugerido) { tag.classList.remove('oculto');
+    } else { tag.classList.add('oculto'); }
     cajaResultado.classList.remove('oculto');
     cajaResultado.classList.add('fade-in');
     centrar("resultadoUbicacion");

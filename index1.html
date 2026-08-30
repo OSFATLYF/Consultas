@@ -139,12 +139,13 @@ button:hover { background: var(--azul-hover);}
 .carousel-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px;}
 .dot { width: 12px; height: 12px; background: rgba(255, 255, 255, 0.5); border-radius: 50%; cursor: pointer; transition: background 0.3s;}
 .dot.active { background: white; transform: scale(1.2);}
+@media (max-width: 768px) {.banner-carousel {height: auto;}.banner-carousel img.banner {height: auto; object-fit: contain;}}
   
 </style>
 </head>
 <body>
 <div class="banner-carousel">
-    <img id="bannerImage" src="img/1_Baner_OSFATLYF.jpg" class="banner" alt="Banner OSFATLYF">
+    <img id="bannerImage" src="img/001.jpg" class="banner" alt="Banner OSFATLYF">
     <div class="carousel-dots" id="carouselDots"></div>
 </div>
 

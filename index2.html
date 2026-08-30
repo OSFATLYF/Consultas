@@ -4,34 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Orden Consulta</title> 
+<!-- CSS Externos para el Footer y Grid -->
+<link rel="stylesheet" href="https://osfatlyf.org/wp-content/themes/doctio/assets/css/bootstrap.min.css?ver=5.0.0" media="all" />
+<link rel="stylesheet" href="https://osfatlyf.org/wp-content/themes/doctio/assets/css/fontawesome.min.css?ver=5.13.0" media="all" />
+<link rel="stylesheet" href="https://osfatlyf.org/wp-content/themes/doctio/assets/css/main.css?ver=1.0.6" media="all" />
+<link rel="stylesheet" href="https://osfatlyf.org/wp-content/themes/doctio/style.css?ver=1.0.6" media="all" />
+<link rel="stylesheet" href="https://osfatlyf.org/wp-content/themes/doctio/assets/css/inline-style.css?ver=1.0.6" media="all" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik:400,500,600,700%7CPoppins:700,500,600&display=swap" media="all" />
+<!-- -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body { font-family: Arial, sans-serif; background: #f4f4f4;}
-.banner{
-    width: 100%; height: auto;
-    max-height: 250px;
-    object-fit: contain; 
-    background: white;   
-    padding: 10px 0;}
-.contenedor{
-    width: 90%; max-width:900px;
-    margin:20px auto 10vh auto; background:white;
-    padding:25px; border-radius:12px;
+body {font-family: Arial, sans-serif; background: #f4f4f4;}
+.banner{width: 100%; height: auto; max-height: 250px; object-fit: contain; background: white; padding: 10px 0;}
+.contenedor{width: 90%; max-width:900px; margin: 20px auto 40px auto; padding:25px; border-radius:12px;
     box-shadow:0 0 15px rgba(0,0,0,.1);}
 h1{text-align:center;margin-bottom:25px;color:#333;}
 .seccion{margin-top:25px;}
-label{display:block;margin-bottom:8px;
-    font-weight:bold;color:#444;}
-input,select,button{width:100%;padding:12px;
-    border:1px solid #ccc;border-radius:6px;
-    font-size:16px;}
-button{margin-top:10px;background:#1976d2;
-    color:white;border:none;cursor:pointer;}
-button:hover{background:#1565c0;}
-
+label{display:block;margin-bottom:8px; font-weight:bold;color:#444;}
+input,select,button{width:100%;padding:12px; border:1px solid #ccc;border-radius:6px; font-size:16px;}
+:root { --azul-principal: #003775; --azul-hover: #004CA3; }
+button { margin-top: 10px; background: var(--azul-principal); color: white; border: none; cursor: pointer; 
+    font-weight: bold; transition: background 0.2s ease; }
+button:hover { background: var(--azul-hover);}
 .oculto{display:none !important;}
 .oculto-planilla {display: none !important;}
 
@@ -44,9 +41,16 @@ button:hover{background:#1565c0;}
     overflow: hidden;box-shadow: 0 8px 25px rgba(0,0,0,.20);
     margin: 15px auto 0 auto;}   
 
-#seccionUbicacion, #seccionUbicacion select {
-    max-width: 900px;margin-left: auto;margin-right: auto;}
-#seccionUbicacion label {text-align: center;}
+#seccionUbicacion, 
+#seccionUbicacion select { max-width: 900px; margin-left: auto; margin-right: auto;}
+#seccionUbicacion label { text-align: center;} 
+#seccionTipoOrden label,
+#seccionUbicacion label,
+#ordenesDiv label,
+#pagoDiv > label,
+#recepcionDiv label { color: var(--azul-principal) !important; text-align: left !important;
+    font-size: 1.1rem !important; margin-bottom: 12px; display: block; }
+
 .datos-tarjeta {position: absolute;top: 48%;left: 20px;right: 30px; color: black;font-weight: bold;}
 .dato {font-size: 16px; margin-bottom: 8px;font-family: Arial, sans-serif;}
 .error-dni {color: red;font-weight: bold;text-align: center;margin-top: 15px;}
@@ -65,11 +69,10 @@ button:hover{background:#1565c0;}
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
 }
-.result-box {
-    background-color: #ebf8ff; border-left: 4px solid #1976d2;
-    padding: 20px; border-radius: 4px;
-    margin-top: 25px; text-align: left !important;}
-.result-box h3 {margin: 0 0 15px 0;color: #1976d2;font-size: 1.1rem;}
+  
+.result-box { background-color: #ebf8ff; border-left: 4px solid var(--azul-principal); padding: 20px; 
+    border-radius: 4px; margin-top: 25px; text-align: left !important; }
+.result-box h3 { margin: 0 0 15px 0; color: var(--azul-principal); font-size: 1.1rem; }
 .prestadores-lista {display: flex;flex-direction: column;gap: 12px;margin-bottom: 20px;}
 .prestador-opcion {
     display: flex;align-items: center;gap: 10px;font-size: 1rem;
@@ -90,19 +93,19 @@ button:hover{background:#1565c0;}
 .error { color: red !important; font-weight: bold; }
   
 /* --- ESTILOS DEL MENÚ LATERAL APEX --- */
-.t-Header { background-color: #ffffff; border-bottom: 1px solid #d0d0d0; border-top: 1px solid #d0d0d0;
-    display: flex; align-items: center; height: 50px; padding: 0 15px; width: 100%; box-sizing: border-box;
-    z-index: 1000;}
+.t-Header { background-color: var(--azul-principal); border: none; display: flex; align-items: center; 
+    height: 50px; padding: 0 15px; width: 100%; box-sizing: border-box; z-index: 1000; }
 .t-Button--headerTree { background: none; border: none; cursor: pointer; padding: 10px; 
     display: flex; align-items: center; justify-content: center;}
 .t-Header-controlsIcon {
-    display: block; width: 18px; height: 2px; background-color: #333; position: relative;}
+    display: block; width: 18px; height: 2px; background-color: #ffffff; position: relative;}
 .t-Header-controlsIcon::before, .t-Header-controlsIcon::after {
-    content: ''; position: absolute; width: 18px; height: 2px; background-color: #333; left: 0;}
+    content: ''; position: absolute; width: 18px; height: 2px; background-color: #ffffff; left: 0;}
+.t-Header div { color: #ffffff !important; }
 .t-Header-controlsIcon::before { top: -6px; }
 .t-Header-controlsIcon::after { bottom: -6px; }
 /* Cuerpo adaptado para dejar espacio a la cabecera fija */
-.t-Body { display: flex; min-height: calc(100vh - 50px); }
+.t-Body { display: flex; min-height: calc(100vh - 50px); flex-direction: row; }
 .t-Body-nav { width: 260px; background-color: #ffffff; border-right: 1px solid #e0e0e0;
     transition: transform 0.3s ease; position: relative; z-index: 999;}
 .t-Body-nav.hidden { transform: translateX(-100%); position: absolute; height: 100%; }
@@ -113,7 +116,19 @@ button:hover{background:#1565c0;}
 .t-TreeNav a:hover { background-color: #f0f0f0; color: #1976d2; }
 
 .alias {font-weight: bold;color: #1976d2 !important; background-color: #ffebee;padding: 2px 6px;
-    border-radius: 4px;font-size: 1.2rem !important}  
+    border-radius: 4px;font-size: 1.2rem !important} 
+  
+/* --- AJUSTES Y ESTILOS DEL FOOTER --- */
+.site-footer { background-color: #002147 !important; color: #ffffff; }
+  /*.site-footer { background-image: url('https://osfatlyf.org/wp-content/themes/doctio/assets/images/footer-bg.jpg');
+    background-size: cover; background-position: center; color: #ffffff; }*/
+.footer-widget-area .footer-title {  font-size: 18px;  color: #ffffff;  margin-bottom: 0px;  letter-spacing: .5px;
+ text-transform: uppercase; font-family: 'Poppins', sans-serif;  font-weight: 600; }
+.footer-separator { border: 0; height: 2px; background: #ffc107; margin: 10px 0 15px 0; opacity: 1; }
+.site-footer a { color: #ffffff; text-decoration: none; transition: color 0.2s ease; }
+.site-footer a:hover { color: #ffc107 !important; text-decoration: underline; }
+.site-footer ul li { margin-bottom: 8px; }
+ 
 </style>
 </head>
 <body>
@@ -139,9 +154,9 @@ button:hover{background:#1565c0;}
                 <ul>                  
                   	<li><a href="https://cirmedsa.com.ar/guia-de-profesionales/" target="_blank">📋 Círculo Médico Salta (WEB)</a></li>
                     <li><a href="cm-salta.html">📋 Círculo Médico Salta (Local)</a></li>
+                    <li><a href="cm-metan.html">📋 Círculo Médico de Metán</a></li>
                     <li><a href="https://www.odontologosalta.com.ar/padron-socios" target="_blank">📋 Círculo de Odontólogos (WEB)</a></li>
                     <li><a href="c-odontologos.html">📋 Círculo de Odontólogos (Local)</a></li>
-                    <li><a href="#">🔔 Novedades</a></li>
                 </ul></div></div>
 
         <!-- Contenido principal con tu formulario intacto -->
@@ -163,12 +178,21 @@ button:hover{background:#1565c0;}
                       <div class="dato">Estado: <span id="card-estado">-</span></div>
                       <div class="dato">Delegación: <span id="card-delegacion">-</span></div>
                   </div>
-                </div>  
+                </div>
+        
+         		<div id="seccionTipoOrden" class="seccion oculto">
+                    <label>¿Qué tipo de orden necesita?</label>
+                    <select id="tipoOrdenSelect" onchange="seleccionarTipoOrden()">
+                        <option value="" disabled selected>-- Seleccione una opción --</option>
+                        <option value="medica">Orden de Consulta Médica</option>
+                        <option value="traumatologia">Orden de Consulta de Traumatología</option>
+                    </select>
+                </div>
                 
                 <div id="mensajeBusqueda" class="error-dni"></div>
 
                 <div id="seccionUbicacion" class="seccion oculto">
-                    <label style="font-size: 1.2rem; color: #1976d2; margin-bottom: 15px;">¿Dónde desea atenderse?</label>
+                  	<label>¿Dónde desea atenderse?</label>
                     
                     <div class="seccion" style="margin-top: 10px;">
                         <label for="localidad">Seleccione opción:</label>
@@ -269,7 +293,68 @@ button:hover{background:#1565c0;}
             </div>
         </div>
     </div>
-      
+  
+  <!-- PIE DE PÁGINA -------------------->
+    <footer class="site-footer td-cover-bg footer-style-one">
+        
+        <!-- Área Superior de Widgets -->
+        <div class="footer-widget-area" style="padding: 60px 0 30px;">
+            <div class="container">
+                <div class="row">
+                    
+                    <!-- Columna 1: Contacto -->
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                        <h2 class="footer-title">CONTACTO</h2>
+                        <hr class="footer-separator"/>
+                        <p>Domicilio:<br> Carlos Pellegrini 525, Salta Capital</p>
+                        <div class="mt-3">
+                            <a href="https://www.argentina.gob.ar/sssalud" target="_blank" rel="noreferrer noopener">
+                                <img width="260" src="https://osfatlyf.org/wp-content/uploads/2024/10/logo-sss-footer.png" alt="SSSalud" style="max-width: 100%; height: auto;"/>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Columna 2: Descargas -->
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                        <h2 class="footer-title">DESCARGAS</h2>
+                        <hr class="footer-separator"/>
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="http://osfatlyf.org/documentos/descargas-footer/formulario_cronicidad_pedido_medicamentos_v.201909.pdf" target="_blank" rel="noreferrer noopener">Formulario de Cronicidad</a></li>
+                            <li><a href="http://osfatlyf.org/documentos/descargas-footer/Formulario_PMI.pdf" target="_blank" rel="noreferrer noopener">Formulario PMI</a></li>
+                            <li><a href="http://osfatlyf.org/documentos/descargas-footer/Formulario_leches.pdf" target="_blank" rel="noreferrer noopener">Formulario Leches</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Columna 3: Servicios Internos -->
+                    <div class="col-lg-4 col-md-6">
+                        <h2 class="footer-title">SERVICIOS INTERNOS</h2>
+                        <hr class="footer-separator"/>
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="https://fatlyf.org/sindicatos/" target="_blank" rel="noreferrer noopener">TELÉFONOS SINDICATOS</a></li>
+                            <li><a href="https://osfatlyf.org/vademecum-osfatlyf-pmo/" target="_blank" rel="noreferrer noopener">Vademecum OSFATLyF – PMO</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área Inferior: Derechos de Autor -->
+        <div class="footer-bottom-area" style="padding: 20px 0; background: rgba(0,0,0,0.2);">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                        <div class="site-info-left" style="color: #ffffff; font-size: 14px;"> © 2026 OSFATLYF (SALTA) </div>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <div class="site-copyright-text" style="color: #ffffff; font-size: 14px;">
+                            Desarrollado por OSFATLyF (Salta) - Peralta Carlos
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+  
 <script>
 const URL_AFILIADOS = "https://script.google.com/macros/s/AKfycbxnC103OPZbsknMUpztQYZuQbZZTzyCkzgbO6GzkFd0FcvRxk1i8fw0yyUhxDATuLcr/exec";
 const URL_GESTION = "https://script.google.com/macros/s/AKfycbydt1EzjFSc-bl386-D_N0gq91lzRzaivUKTky96jlPt5KN8BW8tBowuhUhEovwwDFJ/exec";
@@ -329,7 +414,7 @@ const baseDatosSalta = {
 
 const prestadoresFijos = {
     capital: ["CIRCULO MEDICO DE SALTA", "SAMOBA SALUD SA", "Asociación Salteña de Ortopedia y Traumatología"],
-    guemes: ["SAMOBA SALUD SA"],
+    guemes: ["CIRCULO MEDICO DE SALTA","SAMOBA SALUD SA"],
     anta: ["CIRCULO MEDICO DE ANTA"],
     metan: ["CIRCULO MEDICO METAN"],
   	oran: ["PRESTADOR ABIERTO SALTA"],
@@ -483,7 +568,7 @@ async function buscarUsuario() {
     msgBusqueda.style.display = "block"; 
     msgBusqueda.innerHTML = "Buscando, por favor aguarde...";
     msgBusqueda.className = "error-dni"; 
-    msgBusqueda.style.color = "#1976d2";
+    msgBusqueda.style.color = "var(--azul-principal)";
     botonBuscar.disabled = true; 
     botonBuscar.innerText = "Buscando...";
     tarjeta.classList.add("oculto");
@@ -492,7 +577,6 @@ async function buscarUsuario() {
     document.getElementById("seccion-departamento").classList.add("oculto");
     document.getElementById("seccion-municipio").classList.add("oculto");
     document.getElementById("resultadoUbicacion").classList.add("oculto");
-    document.getElementById("seccionUbicacion").classList.add("oculto");
     document.getElementById("ordenesDiv").classList.add("oculto");
     document.getElementById("pagoDiv").classList.add("oculto");
     document.getElementById("comprobanteDiv").classList.add("oculto");
@@ -500,6 +584,8 @@ async function buscarUsuario() {
     document.getElementById("contenedor-correo").classList.add("oculto");
     document.getElementById("contenedor-whatsapp").classList.add("oculto");
     document.getElementById("enviarDiv").classList.add("oculto");
+  	document.getElementById("seccionTipoOrden").classList.add("oculto");
+  	document.getElementById("seccionUbicacion").classList.add("oculto");
     document.getElementById("resultado").innerHTML = "";
     prestadorSeleccionado = null;
 
@@ -529,7 +615,6 @@ async function buscarUsuario() {
             }
 
             tarjeta.classList.remove("oculto");
-            document.getElementById("seccionUbicacion").classList.remove("oculto");
             
             const select = document.getElementById("ordenes");
             select.innerHTML = "";
@@ -542,37 +627,9 @@ async function buscarUsuario() {
                 resultado.innerHTML = "No cuenta con órdenes disponibles para este mes. Por favor póngase en contacto con la obra social.";
                 resultado.style.color = "red";
             } else {
-                const tieneCondicion = datos.condicion && datos.condicion.trim() !== "";
-                ordenesDisponibles.forEach(orden => {
-                    const op = document.createElement("option");
-                    op.value = orden.id;
-                    if (tieneCondicion) { 
-                        op.textContent = orden.nombre; 
-                    } else { 
-                        const precioFormateado = `$${orden.precio.toLocaleString('es-AR')}`;
-                        op.textContent = `${orden.nombre} (${precioFormateado})`; 
-                    }
-                    select.appendChild(op);
-                });
-
-                document.getElementById("ordenesDiv").classList.remove("oculto");
-                
-                if (tieneCondicion) { 
-                    document.getElementById("pagoDiv").classList.add("oculto");
-                } else {
-                    document.getElementById("pagoDiv").classList.remove("oculto");
-                    const labelPlanilla = document.getElementById("opcionPlanillaLabel");
-                    if (afiliado && afiliado.trabajador && afiliado.trabajador.toUpperCase() === "ACTIVO") {
-                        labelPlanilla.classList.remove("oculto-planilla");
-                    } else { 
-                        labelPlanilla.classList.add("oculto-planilla"); 
-                    }
-                }
-                
-                document.getElementById("recepcionDiv").classList.remove("oculto");
-                document.getElementById("enviarDiv").classList.remove("oculto");
+              	document.getElementById("seccionTipoOrden").classList.remove("oculto");
+   				centrar("seccionTipoOrden");
             }
-            centrar("seccionUbicacion");
         } else {
             msgBusqueda.style.display = "block";
             msgBusqueda.innerHTML = "DNI no encontrado";
@@ -741,37 +798,34 @@ async function enviarSolicitud() {
     const orden = ordenSelect.value;
     const ordenNombre = ordenSelect.options[ordenSelect.selectedIndex]?.text || "";
     
-    const localidadSeleccionada = document.getElementById("localidad").value;
+    const tipoOrdenElegido = document.getElementById("tipoOrdenSelect")?.value;
+ 	let localidadSeleccionada = document.getElementById("localidad").value;
+    if (tipoOrdenElegido === "traumatologia") {
+        localidadSeleccionada = "Salta"; 
+        prestadorSeleccionado = "Asociación Salteña de Ortopedia y Traumatología"; 
+    }
     const metodoPago = document.querySelector('input[name="metodoPago"]:checked')?.value;
 
     const metodoRecepcion = document.getElementById("metodoRecepcion").value;
     let datoContacto = "Pasa a retirar";
 
-    if (!localidadSeleccionada) {
-        resultado.innerHTML = "Por favor, seleccione una localidad.";
-        resultado.className = "error";
-        return;
+  	if (tipoOrdenElegido !== "traumatologia") {
+      if (!localidadSeleccionada) {
+          resultado.innerHTML = "Por favor, seleccione una localidad."; resultado.className = "error"; return;}
+      if (!prestadorSeleccionado) {
+          resultado.innerHTML = "Por favor, seleccione un prestador de la lista."; resultado.className = "error"; return;}
     }
-    if (!prestadorSeleccionado) {
-        resultado.innerHTML = "Por favor, seleccione un prestador de la lista.";
-        resultado.className = "error";
-        return;
-    }
-    
+  
     if (!metodoRecepcion) {
-        resultado.innerHTML = "Por favor, seleccione un método de recepción para su orden.";
-        resultado.className = "error";
-        resultado.style.color = "red";
-        return;
+        resultado.innerHTML = "Por favor, seleccione un método de recepción para su orden."; resultado.className = "error";
+        resultado.style.color = "red"; return;
     }
     
     if (metodoRecepcion === "Correo") {
         const correo = document.getElementById("correoContacto").value.trim();
         if (!correo) {
-            resultado.innerHTML = "Por favor, ingrese su correo electrónico.";
-            resultado.className = "error";
-            resultado.style.color = "red";
-            return;
+            resultado.innerHTML = "Por favor, ingrese su correo electrónico."; resultado.className = "error";
+            resultado.style.color = "red"; return;
         }
         datoContacto = correo;
     } else if (metodoRecepcion === "WhatsApp") {
@@ -896,6 +950,7 @@ function limpiarFormulario() {
     document.getElementById("resultadoUbicacion").classList.add("oculto");
     document.getElementById("ordenesDiv").classList.add("oculto");
     document.getElementById("pagoDiv").classList.add("oculto");
+  	document.getElementById("seccionTipoOrden").classList.add("oculto");
     document.getElementById("comprobanteDiv").classList.add("oculto");
     
     document.getElementById("recepcionDiv").classList.add("oculto");
@@ -909,6 +964,81 @@ function limpiarFormulario() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+let ordenesFiltradasActuales = [];
+
+
+function seleccionarTipoOrden() {
+    const tipoElegido = document.getElementById("tipoOrdenSelect").value;
+    const selectOrdenes = document.getElementById("ordenes");
+    selectOrdenes.innerHTML = "";
+
+    const seccionUbicacion = document.getElementById("seccionUbicacion");
+
+    if (tipoElegido === "medica") {
+        ordenesFiltradasActuales = ordenesDisponibles;
+        
+        // Si es médica, SÍ mostramos el selector de dónde desea atenderse
+        seccionUbicacion.classList.remove("oculto");
+        prestadorSeleccionado = null; // Se limpiará para que el usuario elija su zona
+        
+    } else if (tipoElegido === "traumatologia") {
+        const nombresPermitidos = [
+            "CONSULTA MEDICA", 
+            "CONSULTA MEDICA TRAUMATOLOGIA", 
+            "CONSULTA POR GUARDIA"
+        ];
+        
+        ordenesFiltradasActuales = ordenesDisponibles.filter(orden => 
+            nombresPermitidos.some(nombre => orden.nombre.toUpperCase().includes(nombre))
+        );
+
+        // Si es traumatología, OCULTAMOS la sección de ubicación y asignamos un prestador por defecto
+        seccionUbicacion.classList.add("oculto");
+        prestadorSeleccionado = "Asociación Salteña de Ortopedia y Traumatología";
+      	const selectLocalidad = document.getElementById("localidad");
+        	if (selectLocalidad) { selectLocalidad.value = "Salta Capital";}
+    }
+
+    if (ordenesFiltradasActuales.length === 0) {
+        selectOrdenes.innerHTML = "<option>No hay órdenes disponibles para esta categoría</option>";
+        document.getElementById("ordenesDiv").classList.remove("oculto");
+        return;
+    }
+
+    const tieneCondicion = afiliado && afiliado.condicion && afiliado.condicion.trim() !== "";
+    
+    ordenesFiltradasActuales.forEach(orden => {
+        const op = document.createElement("option");
+        op.value = orden.id;
+        if (tieneCondicion) { 
+            op.textContent = orden.nombre; 
+        } else { 
+            const precioFormateado = `$${orden.precio.toLocaleString('es-AR')}`;
+            op.textContent = `${orden.nombre} (${precioFormateado})`; 
+        }
+        selectOrdenes.appendChild(op);
+    });
+
+    document.getElementById("ordenesDiv").classList.remove("oculto");
+    
+    if (tieneCondicion) { 
+        document.getElementById("pagoDiv").classList.add("oculto");
+    } else {
+        document.getElementById("pagoDiv").classList.remove("oculto");
+        const labelPlanilla = document.getElementById("opcionPlanillaLabel");
+        if (afiliado && afiliado.trabajador && afiliado.trabajador.toUpperCase() === "ACTIVO") {
+            labelPlanilla.classList.remove("oculto-planilla");
+        } else { 
+            labelPlanilla.classList.add("oculto-planilla"); 
+        }
+    }
+    
+    document.getElementById("recepcionDiv").classList.remove("oculto");
+    document.getElementById("enviarDiv").classList.remove("oculto");
+    centrar("ordenesDiv");
+}
+  
+  
 function salirYReiniciar() {
     document.getElementById("mensaje-exito").classList.add("oculto");
     document.getElementById("busquedaDiv").classList.remove("oculto");

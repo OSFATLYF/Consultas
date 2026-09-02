@@ -128,11 +128,85 @@ button:hover { background: var(--azul-hover);}
 .site-footer a { color: #ffffff; text-decoration: none; transition: color 0.2s ease; }
 .site-footer a:hover { color: #ffc107 !important; text-decoration: underline; }
 .site-footer ul li { margin-bottom: 8px; }
- 
+
+/* Contenedor principal del carrusel */
+.banner-carousel { position: relative; width: 100vw; max-width: 1000px; left: 50%; transform: translateX(-50%); margin-left: 0;
+    margin-right: 0; overflow: hidden; display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15); height: 300px;}
+.banner-carousel img.banner { width: 100%; height: 100%; min-height: 100px; max-height: 300px; object-fit: cover;
+    object-position: center; display: block; margin: 0 auto; pointer-events: none; transition: opacity 0.5s ease-in-out;}
+
+.carousel-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px;}
+.dot { width: 12px; height: 12px; background: rgba(255, 255, 255, 0.5); border-radius: 50%; cursor: pointer; transition: background 0.3s;}
+.dot.active { background: white; transform: scale(1.2);}
+@media (max-width: 768px) {.banner-carousel {height: auto;}.banner-carousel img.banner {height: auto; object-fit: contain;}}
+  /*fgsdfgsdfg*/
+.opcion-radio {
+  position: relative; /* Permite posicionar el tooltip justo arriba */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.btn-copiar {
+  /* Forzar tamaño pequeño compacto */
+  width: auto !important;
+  min-width: unset !important;
+  max-width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  
+  /* Evitar que flex lo estire */
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+
+  /* Estilos de bordes y apariencia */
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-left: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-copiar:hover {
+  background-color: #dee2e6;
+}
+/* Tooltip / Notificación de "¡Alias copiado!" */
+.tooltip-copiado {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: -28px;
+  right: 10px;
+  background-color: #28a745;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.tooltip-copiado.visible {
+  visibility: visible;
+  opacity: 1;
+}
+  
+  
 </style>
 </head>
 <body>
-    <img src="img/1_Baner_OSFATLYF.jpg" class="banner" alt="Banner OSFATLYF">  
+<div class="banner-carousel">
+    <img id="bannerImage" src="img/001.jpg" class="banner" alt="Banner OSFATLYF">
+    <div class="carousel-dots" id="carouselDots"></div>
+</div>
 
 
     <header class="t-Header" id="t_Header">
@@ -241,10 +315,24 @@ button:hover { background: var(--azul-hover);}
                             <input type="radio" name="metodoPago" value="Descuento por planilla" onchange="cambioMetodoPago()">
                             <span>Descuento por planilla</span>
                         </label>
-                        <label class="opcion-radio">
-                         	<input type="radio" name="metodoPago" value="Transferencia bancaria" onchange="cambioMetodoPago()">
-                            <span>Transferencia bancaria: <span class="alias">coseguros.osfatlyf</span></span>
-                        </label>
+
+<label class="opcion-radio" style="position: relative; display: inline-flex; align-items: center; gap: 6px;">
+  <input type="radio" name="metodoPago" value="Transferencia bancaria" onchange="cambioMetodoPago()">
+  <span class="texto-pago">
+    Transferencia bancaria: <strong class="alias" id="alias-texto">coseguros.osfatlyf</strong>
+  </span>
+  
+  <!-- Botón con tamaño estrictamente fijo de 30x30 px -->
+  <button type="button" 
+          class="btn-copiar" 
+          onclick="copiarAlias(event)" 
+          title="Copiar alias" 
+          style="width:30px !important; height:30px !important; padding:0 !important; flex-shrink:0 !important; display:inline-flex !important; align-items:center; justify-content:center;">
+    📋
+  </button>
+
+  <span id="alerta-copiado" class="tooltip-copiado">¡Alias copiado!</span>
+</label>
                     </div>
                 </div>
               
@@ -371,7 +459,7 @@ const baseDatosSalta = {
     "Cafayate": { municipios: ["CAFAYATE"],
         prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]},
     "Capital": { municipios: ["SALTA", "SAN LORENZO"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA", "SAMOBA SALUD SA", "Asociación Salteña de Ortopedia y Traumatología"] },
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA", "SAMOBA SALUD SA"] },
     "Cerrillos": { municipios: ["CERRILLOS", "LA MERCED"],
         prestadorDefecto: ["CIRCULO MEDICO DE SALTA"] },
     "Chicoana": { municipios: ["CHICOANA", "EL CARRIL"],
@@ -413,7 +501,7 @@ const baseDatosSalta = {
 };
 
 const prestadoresFijos = {
-    capital: ["CIRCULO MEDICO DE SALTA", "SAMOBA SALUD SA", "Asociación Salteña de Ortopedia y Traumatología"],
+    capital: ["CIRCULO MEDICO DE SALTA", "SAMOBA SALUD SA"],
     guemes: ["CIRCULO MEDICO DE SALTA","SAMOBA SALUD SA"],
     anta: ["CIRCULO MEDICO DE ANTA"],
     metan: ["CIRCULO MEDICO METAN"],
@@ -528,8 +616,7 @@ function mostrarPrestadores(lista, esSugerido) {
         radio.value = prestador;
         radio.onchange = function() { prestadorSeleccionado = this.value; };
         let nombreVisual = prestador;
-        if (prestador === "SAMOBA SALUD SA") { nombreVisual = "INSTITUTO MEDICO SAVIA SALUD"; 
-        } else if (prestador === "PRESTADOR ABIERTO SALTA") { nombreVisual = "CIRCULO MEDICO DE ORAN"; }        
+        if (prestador === "SAMOBA SALUD SA") { nombreVisual = "INSTITUTO MEDICO SAVIA SALUD"; }      
         label.appendChild(radio);
         label.appendChild(document.createTextNode(nombreVisual));
         contenedor.appendChild(label);
@@ -1042,7 +1129,68 @@ function seleccionarTipoOrden() {
 function salirYReiniciar() {
     document.getElementById("mensaje-exito").classList.add("oculto");
     document.getElementById("busquedaDiv").classList.remove("oculto");
+}
+
+// CONFIGURACIÓN DE LAS IMÁGENES DE CARRUSEL
+const GITHUB_BASE_URL = "https://raw.githubusercontent.com/OSFATLYF/Consultas/main/img/";
+const TOTAL_BANNERS = 3; 
+let currentIndex = 1;
+let carouselInterval;
+
+function formatIndex(num) { return String(num).padStart(3, '0');}
+function actualizarBanner() {
+    const imgElement = document.getElementById("bannerImage");
+    if (!imgElement) return;
+    const formattedNum = formatIndex(currentIndex);
+    imgElement.style.opacity = "0.3";
+    setTimeout(() => { imgElement.src = `${GITHUB_BASE_URL}${formattedNum}.jpg`;
+        imgElement.style.opacity = "1"; }, 200);
+    const dots = document.querySelectorAll(".dot");
+    dots.forEach((dot, index) => { dot.classList.toggle("active", index + 1 === currentIndex);});
+}
+function irASlide(num) { currentIndex = num; actualizarBanner(); reiniciarAutoplay();}
+function reiniciarAutoplay() {
+    clearInterval(carouselInterval);
+    carouselInterval = setInterval(() => {
+        currentIndex = (currentIndex % TOTAL_BANNERS) + 1;
+        actualizarBanner();}, 5000);
+}
+function initCarousel() {
+    const dotsContainer = document.getElementById("carouselDots");
+    if (!dotsContainer) return;
+    dotsContainer.innerHTML = "";
+    for (let i = 1; i <= TOTAL_BANNERS; i++) { 
+        const dot = document.createElement("span");
+        dot.className = `dot ${i === 1 ? 'active' : ''}`; 
+        dot.addEventListener("click", () => irASlide(i));
+        dotsContainer.appendChild(dot);
+    }
+    actualizarBanner();
+    reiniciarAutoplay();
+}
+document.addEventListener("DOMContentLoaded", initCarousel);
+
+  
+function copiarAlias(e) {
+  e.stopPropagation();
+  e.preventDefault();
+
+  const alias = document.getElementById("alias-texto").innerText;
+  const tooltip = document.getElementById("alerta-copiado");
+  
+  navigator.clipboard.writeText(alias).then(() => {
+    // Muestra la alerta
+    tooltip.classList.add("visible");
+    
+    // Oculta la alerta tras 1.5 segundos
+    setTimeout(() => {
+      tooltip.classList.remove("visible");
+    }, 1500);
+  }).catch(err => {
+    console.error("Error al copiar: ", err);
+  });
 }  
+  
 </script>
 </body>
 </html>

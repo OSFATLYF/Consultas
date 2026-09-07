@@ -114,9 +114,6 @@ button:hover { background: var(--azul-hover);}
 .t-TreeNav li { margin: 5px 0; }
 .t-TreeNav a { text-decoration: none; color: #333; display: block; padding: 6px 10px; border-radius: 4px; }
 .t-TreeNav a:hover { background-color: #f0f0f0; color: #1976d2; }
-
-.alias {font-weight: bold;color: #1976d2 !important; background-color: #ffebee;padding: 2px 6px;
-    border-radius: 4px;font-size: 1.2rem !important} 
   
 /* --- AJUSTES Y ESTILOS DEL FOOTER --- */
 .site-footer { background-color: #002147 !important; color: #ffffff; }
@@ -140,6 +137,29 @@ button:hover { background: var(--azul-hover);}
 .dot { width: 12px; height: 12px; background: rgba(255, 255, 255, 0.5); border-radius: 50%; cursor: pointer; transition: background 0.3s;}
 .dot.active { background: white; transform: scale(1.2);}
 @media (max-width: 768px) {.banner-carousel {height: auto;}.banner-carousel img.banner {height: auto; object-fit: contain;}}
+
+/* --- ESTILOS DE CAJA DE DATOS Y BOTÓN DE COPIAR --- */
+.caja-datos-bancarios { margin-top: 15px; background-color: #ffffff; border-radius: 8px; padding: 15px 20px;
+  border: 1px solid #ced4da; border-left: 4px solid var(--azul-principal); width: 100%; max-width: 480px; 
+  box-sizing: border-box;}
+.titulo-datos { font-size: 0.9rem; font-weight: bold; color: var(--azul-principal); margin-bottom: 12px;
+  text-transform: uppercase; letter-spacing: 0.5px;}
+.fila-dato { display: flex; justify-content: space-between; align-items: center; padding: 8px 0;
+  border-bottom: 1px solid #e9ecef; font-size: 0.92rem; gap: 15px; }
+.fila-dato:last-child { border-bottom: none;}
+.etiqueta { color: #555; font-weight: bold; white-space: nowrap; }
+.valor-container { display: flex; align-items: center; gap: 10px; white-space: nowrap;}
+.valor { color: #212529; font-weight: bold; white-space: nowrap;}
+.valor-destacado { color: #0d6efd; font-weight: bold; font-size: 1rem; white-space: nowrap;}
+button.btn-copiar { display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  width: auto !important; min-width: 58px !important; max-width: 58px !important; height: 26px !important;
+  background-color: #e9ecef !important; color: #333 !important; border: 1px solid #ced4da !important;
+  border-radius: 4px !important; padding: 0 8px !important; font-size: 0.75rem !important;
+  font-weight: bold !important; cursor: pointer !important; transition: all 0.2s ease !important;
+  margin: 0 !important; flex-shrink: 0 !important; box-sizing: border-box !important;}
+button.btn-copiar:hover { background-color: #dee2e6 !important;}
+button.btn-copiar.copiado { background-color: #198754 !important; color: #ffffff !important; border-color: #198754 !important;}
+  
   
 </style>
 </head>
@@ -170,6 +190,7 @@ button:hover { background: var(--azul-hover);}
                   	<li><a href="https://cirmedsa.com.ar/guia-de-profesionales/" target="_blank">📋 Círculo Médico Salta (WEB)</a></li>
                     <li><a href="cm-salta.html">📋 Círculo Médico Salta (Local)</a></li>
                     <li><a href="cm-metan.html">📋 Círculo Médico de Metán</a></li>
+					<li><a href="cm-tartagal.html">📋 Círculo Médico de Tartagal</a></li>
                     <li><a href="https://www.odontologosalta.com.ar/padron-socios" target="_blank">📋 Círculo de Odontólogos (WEB)</a></li>
                     <li><a href="c-odontologos.html">📋 Círculo de Odontólogos (Local)</a></li>
                 </ul></div></div>
@@ -249,19 +270,45 @@ button:hover { background: var(--azul-hover);}
                     <select id="ordenes"></select>
                 </div>
 
-                <div id="pagoDiv" class="seccion oculto">
-                    <label>¿Cómo desea realizar el pago?</label>
-                    <div class="opciones-pago">
-                        <label class="opcion-radio" id="opcionPlanillaLabel">
-                            <input type="radio" name="metodoPago" value="Descuento por planilla" onchange="cambioMetodoPago()">
-                            <span>Descuento por planilla</span>
-                        </label>
-                        <label class="opcion-radio">
-                         	<input type="radio" name="metodoPago" value="Transferencia bancaria" onchange="cambioMetodoPago()">
-                            <span>Transferencia bancaria: <span class="alias">coseguros.osfatlyf</span></span>
-                        </label>
-                    </div>
-                </div>
+<div id="pagoDiv" class="seccion oculto">
+    <label>¿Cómo desea realizar el pago?</label>
+    <div class="opciones-pago">
+        <label class="opcion-radio" id="opcionPlanillaLabel">
+            <input type="radio" name="metodoPago" value="Descuento por planilla" onchange="cambioMetodoPago()">
+            <span>Descuento por planilla</span>
+        </label>
+        <label class="opcion-radio">
+            <input type="radio" name="metodoPago" value="Transferencia bancaria" onchange="cambioMetodoPago()">
+            <span>Transferencia bancaria</span>
+        </label>
+    </div>
+    <div id="datosBancariosDiv" class="caja-datos-bancarios oculto">
+        <div class="titulo-datos">Datos para la transferencia</div>
+        <div class="fila-dato"> <span class="etiqueta">Titular:</span> <span class="valor">Micam Srl</span> </div>
+        <div class="fila-dato">
+            <span class="etiqueta">CUIT:</span>
+            <div class="valor-container">
+                <span class="valor" id="cuit-texto">30-71152699-0</span>
+                <button type="button" class="btn-copiar" onclick="copiarTexto('cuit-texto', this)">Copiar</button>
+            </div>
+        </div>
+        <div class="fila-dato"> <span class="etiqueta">Banco:</span> <span class="valor">Banco Galicia</span> </div>
+        <div class="fila-dato">
+            <span class="etiqueta">Alias:</span>
+            <div class="valor-container">
+                <span class="valor-destacado" id="alias-texto">coseguros.osfatlyf</span>
+                <button type="button" class="btn-copiar" onclick="copiarTexto('alias-texto', this)">Copiar</button>
+            </div>
+        </div>
+        <div class="fila-dato">
+            <span class="etiqueta">CBU:</span>
+            <div class="valor-container">
+                <span class="valor" id="cbu-texto">0070355820000004115140</span>
+                <button type="button" class="btn-copiar" onclick="copiarTexto('cbu-texto', this)">Copiar</button>
+            </div>
+        </div>
+    </div>
+</div>
               
                 <div id="comprobanteDiv" class="seccion oculto">
                     <small style="display: block; color: #555; margin-top: 5px;">
@@ -386,7 +433,7 @@ const baseDatosSalta = {
     "Cafayate": { municipios: ["CAFAYATE"],
         prestadorDefecto: ["CIRCULO MEDICO DE SALTA"]},
     "Capital": { municipios: ["SALTA", "SAN LORENZO"],
-        prestadorDefecto: ["CIRCULO MEDICO DE SALTA", "SAMOBA SALUD SA", "Asociación Salteña de Ortopedia y Traumatología"] },
+        prestadorDefecto: ["CIRCULO MEDICO DE SALTA", "SAMOBA SALUD SA"] },
     "Cerrillos": { municipios: ["CERRILLOS", "LA MERCED"],
         prestadorDefecto: ["CIRCULO MEDICO DE SALTA"] },
     "Chicoana": { municipios: ["CHICOANA", "EL CARRIL"],
@@ -428,7 +475,7 @@ const baseDatosSalta = {
 };
 
 const prestadoresFijos = {
-    capital: ["CIRCULO MEDICO DE SALTA", "SAMOBA SALUD SA", "Asociación Salteña de Ortopedia y Traumatología"],
+    capital: ["CIRCULO MEDICO DE SALTA", "SAMOBA SALUD SA"],
     guemes: ["CIRCULO MEDICO DE SALTA","SAMOBA SALUD SA"],
     anta: ["CIRCULO MEDICO DE ANTA"],
     metan: ["CIRCULO MEDICO METAN"],
@@ -543,8 +590,7 @@ function mostrarPrestadores(lista, esSugerido) {
         radio.value = prestador;
         radio.onchange = function() { prestadorSeleccionado = this.value; };
         let nombreVisual = prestador;
-        if (prestador === "SAMOBA SALUD SA") { nombreVisual = "INSTITUTO MEDICO SAVIA SALUD"; 
-        } else if (prestador === "PRESTADOR ABIERTO SALTA") { nombreVisual = "CIRCULO MEDICO DE ORAN"; }        
+        if (prestador === "SAMOBA SALUD SA") { nombreVisual = "INSTITUTO MEDICO SAVIA SALUD"; }      
         label.appendChild(radio);
         label.appendChild(document.createTextNode(nombreVisual));
         contenedor.appendChild(label);
@@ -677,11 +723,14 @@ async function obtenerOrdenesDisponibles(dni, plan) {
 function cambioMetodoPago() {
     const metodoSeleccionado = document.querySelector('input[name="metodoPago"]:checked')?.value;
     const comprobanteDiv = document.getElementById("comprobanteDiv");
+	const datosBancariosDiv = document.getElementById("datosBancariosDiv");
 
     if (metodoSeleccionado === "Transferencia bancaria") {
+      	datosBancariosDiv.classList.remove("oculto");
         comprobanteDiv.classList.remove("oculto");
         centrar("comprobanteDiv");
     } else {
+      	datosBancariosDiv.classList.add("oculto");
         comprobanteDiv.classList.add("oculto");
         document.getElementById("comprobanteInput").value = ""; 
         textoComprobanteCapturado = "";
@@ -754,23 +803,23 @@ async function procesarArchivo() {
     }
 
     try {
-        const worker = await Tesseract.createWorker('eng');
+      	const worker = await Tesseract.createWorker('spa');
         const ret = await worker.recognize(file);
         await worker.terminate();
         const textoLeido = ret.data.text.toLowerCase();
+      	const textoLimpio = textoLeido.replace(/[\s\-_]/g, '');
+		textoComprobanteCapturado = ret.data.text;
         textoComprobanteCapturado = ret.data.text;
 
         if (textarea) textarea.value = textoComprobanteCapturado;
         if (contenedor) contenedor.style.display = "block";
 
-        const palabrasClave = [
-            "transferencia", "transfiriendo", "cbu", "cvu", "alias", "importe", "monto", "cuit", "cuil", "banco", "comprobante", 
-            "operacion", "nro", "numero", "fecha", "destino", "origen", "mp", "mercadopago", "ueno", "brubank", "galicia", "macro", "bbva", "santander"
-        ];
-
-        let tieneCoincidencias = palabrasClave.some(palabra => textoLeido.includes(palabra));
-
-        if (tieneCoincidencias && textoLeido.trim().length > 15) {
+        const palabrasGenericas = [ "transferencia", "transfiriendo", "comprobante", "importe", "monto", 
+            "operacion", "exito", "exitosa", "enviado", "recibido", "comprobante de pago" ];
+        const datosMiCuenta = [ "micam", "30711526990", "coseguros.osfatlyf", "0070355820000004115140" ];
+        const esComprobante = palabrasGenericas.some(palabra => textoLeido.includes(palabra));
+        const esParaMiCuenta = datosMiCuenta.some(dato => textoLeido.includes(dato) || textoLimpio.includes(dato));
+        if (esComprobante && esParaMiCuenta && textoLeido.trim().length > 15) {
             archivoProcesadoValido = file;
             if (mensaje) { 
                 mensaje.innerHTML = "✓ Comprobante legible.";
@@ -1058,10 +1107,10 @@ function salirYReiniciar() {
     document.getElementById("mensaje-exito").classList.add("oculto");
     document.getElementById("busquedaDiv").classList.remove("oculto");
 }
-  
+
 // CONFIGURACIÓN DE LAS IMÁGENES DE CARRUSEL
 const GITHUB_BASE_URL = "https://raw.githubusercontent.com/OSFATLYF/Consultas/main/img/";
-const TOTAL_BANNERS = 3; 
+const TOTAL_BANNERS = 4; 
 let currentIndex = 1;
 let carouselInterval;
 
@@ -1098,6 +1147,16 @@ function initCarousel() {
 }
 document.addEventListener("DOMContentLoaded", initCarousel);
 
+  
+function copiarTexto(idElemento, boton) {
+  const texto = document.getElementById(idElemento).innerText;
+  navigator.clipboard.writeText(texto).then(() => {
+    boton.innerText = "Copiado";
+    boton.classList.add("copiado");
+    setTimeout(() => { boton.innerText = "Copiar"; boton.classList.remove("copiado"); }, 1500);
+  }).catch(err => { console.error("Error al copiar: ", err); });
+}  
+  
 </script>
 </body>
 </html>

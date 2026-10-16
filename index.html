@@ -286,26 +286,26 @@ button.btn-copiar.copiado { background-color: #198754 !important; color: #ffffff
     </div>
     <div id="datosBancariosDiv" class="caja-datos-bancarios oculto">
         <div class="titulo-datos">Datos para la transferencia</div>
-        <div class="fila-dato"> <span class="etiqueta">Titular:</span> <span class="valor">Micam Srl</span> </div>
+        <div class="fila-dato"> <span class="etiqueta">Titular:</span> <span class="valor">O.S.F.A.T.LUZYFUERZA</span> </div>
         <div class="fila-dato">
             <span class="etiqueta">CUIT:</span>
             <div class="valor-container">
-                <span class="valor" id="cuit-texto">30-71152699-0</span>
+                <span class="valor" id="cuit-texto">30-66322124-4</span>
                 <button type="button" class="btn-copiar" onclick="copiarTexto('cuit-texto', this)">Copiar</button>
             </div>
         </div>
-        <div class="fila-dato"> <span class="etiqueta">Banco:</span> <span class="valor">Banco Galicia</span> </div>
+        <div class="fila-dato"> <span class="etiqueta">Banco:</span> <span class="valor">Banco Nación</span> </div>
         <div class="fila-dato">
             <span class="etiqueta">Alias:</span>
             <div class="valor-container">
-                <span class="valor-destacado" id="alias-texto">coseguros.osfatlyf</span>
+                <span class="valor-destacado" id="alias-texto">salta.osfa</span>
                 <button type="button" class="btn-copiar" onclick="copiarTexto('alias-texto', this)">Copiar</button>
             </div>
         </div>
         <div class="fila-dato">
             <span class="etiqueta">CBU:</span>
             <div class="valor-container">
-                <span class="valor" id="cbu-texto">0070355820000004115140</span>
+                <span class="valor" id="cbu-texto">0110453420045310663749</span>
                 <button type="button" class="btn-copiar" onclick="copiarTexto('cbu-texto', this)">Copiar</button>
             </div>
         </div>
@@ -819,7 +819,7 @@ async function procesarArchivo() {
         const palabrasGenericas = [ "transferencia", "transfiriendo", "comprobante", "enviaste", "envio", "envío",
 								   "importe", "monto", "exito", "exitosa", "exitoso", "enviado", "recibido",
 								   "operacion", "operación", "origen", "destino", "cbu", "cvu", "alias", "cuit", "cuil" ];
-        const datosMiCuenta = [ "micam", "30711526990", "coseguros.osfatlyf", "0070355820000004115140" ];
+        const datosMiCuenta = [ "O.s.f.a.t.luz Y Fuerza", "30663221244", "salta.osfa", "0110453420045310663749" ];
         const esComprobante = palabrasGenericas.some(palabra => textoLeido.includes(palabra));
         const esParaMiCuenta = datosMiCuenta.some(dato => textoLeido.includes(dato) || textoLimpio.includes(dato));
         if (esComprobante && esParaMiCuenta && textoLeido.trim().length > 15) {

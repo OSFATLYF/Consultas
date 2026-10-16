@@ -1,7 +1,8 @@
 Your site is live at https://osfatlyf.github.io/Consultas/
 
-15/10/26 - Fecha de actualización de notas
-29 de Agosto a las 10 am: el archivo index3.html fue modificado por ultima vez, tiene todo funcional con guia de profecionales, salta, metan y odontologos
-2 de Septiembre a las 1 am: el archivo index2.html fue modificado por ultima vez, se le agrego los estilos de la pagina oficial de Obra Social
-6 de Septiembre a las 9 pm: el archivo index.html fue modificado por ultima vez,  se agrego guia de profesionales tartagal, se agrego botones para la copia de datos de la transferencia
-6 de Septiembre a las 10 pm: el archivo index1.html fue modificado por ultima vez, se agrego restricciones cvu para las imagenes de transferencia
+### 📋 Historial de Actualizaciones (15/10/26)
+
+* **29 de Agosto (10:00 am):** Última modificación del archivo `index3.html`. Cuenta con funcionalidad completa que incluye guía de profesionales, Salta, Metán y odontólogos.
+* **2 de Septiembre (01:00 am):** Última modificación del archivo `index2.html`. Se le agregaron los estilos de la página oficial de la Obra Social.
+* **6 de Septiembre (09:00 pm):** Última modificación del archivo `index.html`. Se incorporó la guía de profesionales de Tartagal y botones para la copia de datos de transferencia.
+* **6 de Septiembre (10:00 pm):** Última modificación del archivo `index1.html`. Se agregaron restricciones de CVU para las imágenes de transferencia.

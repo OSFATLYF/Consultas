@@ -186,7 +186,8 @@ button.btn-copiar.copiado { background-color: #198754 !important; color: #ffffff
         <!-- Menú lateral (inicia oculto/contraído con la clase 'hidden') -->
         <div class="t-Body-nav hidden" id="t_Body_nav">
             <div class="t-TreeNav" id="t_TreeNav">
-                <ul>                  
+                <ul>
+					<li><a href="cm-anta.html">📋 Círculo Médico Anta</a></li>
                   	<li><a href="https://cirmedsa.com.ar/guia-de-profesionales/" target="_blank">📋 Círculo Médico Salta (WEB)</a></li>
                     <li><a href="cm-salta.html">📋 Círculo Médico Salta (Local)</a></li>
                     <li><a href="cm-metan.html">📋 Círculo Médico de Metán</a></li>
@@ -803,23 +804,24 @@ async function procesarArchivo() {
     }
 
     try {
-        const worker = await Tesseract.createWorker('eng');
+      	const worker = await Tesseract.createWorker('spa');
         const ret = await worker.recognize(file);
         await worker.terminate();
         const textoLeido = ret.data.text.toLowerCase();
+      	const textoLimpio = textoLeido.replace(/[\s\-_]/g, '');
+		textoComprobanteCapturado = ret.data.text;
         textoComprobanteCapturado = ret.data.text;
 
         if (textarea) textarea.value = textoComprobanteCapturado;
         if (contenedor) contenedor.style.display = "block";
 
-        const palabrasClave = [
-            "transferencia", "transfiriendo", "cbu", "cvu", "alias", "importe", "monto", "cuit", "cuil", "banco", "comprobante", 
-            "operacion", "nro", "numero", "fecha", "destino", "origen", "mp", "mercadopago", "ueno", "brubank", "galicia", "macro", "bbva", "santander"
-        ];
-
-        let tieneCoincidencias = palabrasClave.some(palabra => textoLeido.includes(palabra));
-
-        if (tieneCoincidencias && textoLeido.trim().length > 15) {
+        const palabrasGenericas = [ "transferencia", "transfiriendo", "comprobante", "enviaste", "envio", "envío",
+								   "importe", "monto", "exito", "exitosa", "exitoso", "enviado", "recibido",
+								   "operacion", "operación", "origen", "destino", "cbu", "cvu", "alias", "cuit", "cuil" ];
+        const datosMiCuenta = [ "micam", "30711526990", "coseguros.osfatlyf", "0070355820000004115140" ];
+        const esComprobante = palabrasGenericas.some(palabra => textoLeido.includes(palabra));
+        const esParaMiCuenta = datosMiCuenta.some(dato => textoLeido.includes(dato) || textoLimpio.includes(dato));
+        if (esComprobante && esParaMiCuenta && textoLeido.trim().length > 15) {
             archivoProcesadoValido = file;
             if (mensaje) { 
                 mensaje.innerHTML = "✓ Comprobante legible.";

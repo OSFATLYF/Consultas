@@ -30,21 +30,27 @@ body {
     box-shadow: 0 4px 20px rgba(0,0,0,.08);
 }
 
-/* Modo pantalla completa cuando se muestra la credencial */
+/* Modo pantalla completa real para la credencial sin márgenes */
 body.modo-credencial {
-    background: #111; /* Fondo oscuro elegante para resaltar la credencial */
+    background: #000; 
     padding: 0;
     margin: 0;
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 body.modo-credencial .contenedor {
     max-width: 100% !important;
-    width: 100vw !important;
-    height: 100vh !important;
+    width: 100% !important;
+    height: 100% !important;
     background: transparent !important;
     box-shadow: none !important;
-    padding: 10px !important;
+    padding: 0 !important;
+    margin: 0 !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -75,26 +81,26 @@ button {
 button:hover { background: var(--azul-hover);}
 .oculto{display:none !important;}
 
-/* Tarjeta adaptada a pantalla completa / horizontal */
+/* Tarjeta 100% fluida ocupando todo el ancho */
 .tarjeta-afiliado {
-    width: 100%;
-    max-width: 650px;
+    width: 96vw; /* Ocupa casi todo el ancho de la pantalla con mínimos bordes naturales */
+    max-width: 96vw;
     aspect-ratio: 600 / 340; 
     background-size: cover;
     background-position: center;
     position: relative;
-    border-radius: 12px;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 8px 30px rgba(0,0,0,.4);
-    margin: auto;
-    transition: transform 0.3s ease;
+    box-shadow: 0 8px 30px rgba(0,0,0,.6);
+    transition: all 0.3s ease;
 }   
 
-/* Clase para forzar la rotación horizontal ocupando todo el ancho posible en móviles */
+/* Al girar, se expande al máximo aprovechando el alto/ancho de la pantalla */
 .tarjeta-afiliado.rotada {
-    width: 95vh;
-    max-width: 95vh;
-    aspect-ratio: 340 / 600; /* Invierte la proporción para simular giro físico */
+    width: 96vh; /* Se adapta a la altura de la pantalla al ponerse horizontal */
+    max-width: 96vh;
+    aspect-ratio: 340 / 600; 
+    transform: rotate(90deg);
 }
 
 .datos-tarjeta {
@@ -107,24 +113,27 @@ button:hover { background: var(--azul-hover);}
 }
 
 .tarjeta-afiliado.rotada .datos-tarjeta {
-    top: 35%; /* Ajusta posiciones internas si se invierte la proporción */
+    top: 38%; 
 }
 
 .dato {
-    font-size: clamp(0.9rem, 2.5vw, 1.2rem); 
+    font-size: clamp(0.9rem, 3.2vw, 1.4rem); /* Texto más grande y completamente adaptativo */
     margin-bottom: 2%; 
     font-family: Arial, sans-serif;
 }
 
 .error-dni {color: red; font-weight: bold; text-align: center; margin-top: 15px;}
 
-/* Barra de acciones inferior flotante en modo credencial */
+/* Botones flotantes abajo en pantalla completa */
 .acciones-credencial {
     display: flex;
     gap: 15px;
-    width: 100%;
-    max-width: 450px;
-    padding: 10px;
+    width: 90%;
+    max-width: 400px;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 .btn-secundario {
     background: #495057;
@@ -160,7 +169,7 @@ button:hover { background: var(--azul-hover);}
         <!-- Botones de acción al mostrar la credencial -->
         <div id="accionesDiv" class="oculto acciones-credencial">
             <button onclick="girarTarjeta()" class="btn-secundario">🔄 Girar</button>
-            <button onclick="reiniciarBusqueda()">Consultar Otro</button>
+            <button onclick="reiniciarBusqueda()">Otro DNI</button>
         </div>
 
         <div id="mensajeBusqueda" class="error-dni"></div>
@@ -226,7 +235,6 @@ async function buscarUsuario() {
                 tarjeta.style.backgroundImage = `url('${URL_TARJETA_BASICO}')`;
             }
 
-            // Ocultar buscador, título y activar modo pantalla completa para la tarjeta
             document.body.classList.add("modo-credencial");
             tituloPrincipal.classList.add("oculto");
             busquedaDiv.classList.add("oculto");

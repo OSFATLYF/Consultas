@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Credencial Digital</title> 
-<!-- CSS Externos para FontAwesome -->
 <link rel="stylesheet" href="https://osfatlyf.org/wp-content/themes/doctio/assets/css/fontawesome.min.css?ver=5.13.0" media="all" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik:400,500,600,700%7CPoppins:700,500,600&display=swap" media="all" />
 
@@ -17,27 +16,53 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 15px;
+    transition: background 0.3s ease;
 }
+
+/* Contenedor principal inicial (formulario de búsqueda) */
 .contenedor{
     width: 100%; 
-    max-width: 600px; 
+    max-width: 500px; 
     background: #ffffff;
-    margin: 0 auto; 
-    padding: 30px; 
+    padding: 25px; 
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,.08);
 }
+
+/* Modo pantalla completa cuando se muestra la credencial */
+body.modo-credencial {
+    background: #111; /* Fondo oscuro elegante para resaltar la credencial */
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+body.modo-credencial .contenedor {
+    max-width: 100% !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 10px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 h1{
     text-align: center;
     margin-bottom: 25px;
     color: var(--azul-principal, #003775);
     font-size: 1.8rem;
 }
+
 .seccion{margin-top:20px;}
 label{display:block;margin-bottom:8px; font-weight:bold;color:#444;}
-input,button{width:100%;padding:12px; border:1px solid #ccc;border-radius:6px; font-size:16px;}
+input,button{width:100%;padding:14px; border:1px solid #ccc;border-radius:6px; font-size:16px;}
 :root { --azul-principal: #003775; --azul-hover: #004CA3; }
+
 button { 
     margin-top: 10px; 
     background: var(--azul-principal); 
@@ -50,36 +75,78 @@ button {
 button:hover { background: var(--azul-hover);}
 .oculto{display:none !important;}
 
+/* Tarjeta adaptada a pantalla completa / horizontal */
 .tarjeta-afiliado {
     width: 100%;
-    max-width: 600px;
+    max-width: 650px;
     aspect-ratio: 600 / 340; 
-    height: auto;            
     background-size: cover;
     background-position: center;
     position: relative;
-    border-radius: 18px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,.20);
-    margin: 20px auto 0 auto;
+    box-shadow: 0 8px 30px rgba(0,0,0,.4);
+    margin: auto;
+    transition: transform 0.3s ease;
 }   
 
-.datos-tarjeta {position: absolute; top: 48%; left: 20px; right: 30px; color: black; font-weight: bold;}
-.dato {font-size: 16px; margin-bottom: 8px; font-family: Arial, sans-serif;}
+/* Clase para forzar la rotación horizontal ocupando todo el ancho posible en móviles */
+.tarjeta-afiliado.rotada {
+    width: 95vh;
+    max-width: 95vh;
+    aspect-ratio: 340 / 600; /* Invierte la proporción para simular giro físico */
+}
+
+.datos-tarjeta {
+    position: absolute; 
+    top: 48%; 
+    left: 5%; 
+    right: 5%; 
+    color: black; 
+    font-weight: bold;
+}
+
+.tarjeta-afiliado.rotada .datos-tarjeta {
+    top: 35%; /* Ajusta posiciones internas si se invierte la proporción */
+}
+
+.dato {
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem); 
+    margin-bottom: 2%; 
+    font-family: Arial, sans-serif;
+}
+
 .error-dni {color: red; font-weight: bold; text-align: center; margin-top: 15px;}
+
+/* Barra de acciones inferior flotante en modo credencial */
+.acciones-credencial {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    max-width: 450px;
+    padding: 10px;
+}
+.btn-secundario {
+    background: #495057;
+}
+.btn-secundario:hover {
+    background: #343a40;
+}
 </style>
 </head>
 <body>
 
-    <div class="contenedor">
-        <h1>Credencial Digital</h1>
+    <div class="contenedor" id="contenedorPrincipal">
+        <h1 id="tituloPrincipal">Credencial Digital</h1>
 
+        <!-- Formulario de Búsqueda -->
         <div id="busquedaDiv" class="seccion">
             <label for="dni">DNI del Afiliado</label>
             <input type="text" id="dni" placeholder="Ingrese DNI" onkeydown="detectarEnter(event)">
             <button onclick="buscarUsuario()">Ver Credencial</button>
         </div>
      
+        <!-- Visualización de la Credencial -->
         <div id="tarjetaAfiliado" class="tarjeta-afiliado oculto">
           <div class="datos-tarjeta">
               <div class="dato" id="card-nombre">-</div>
@@ -88,6 +155,12 @@ button:hover { background: var(--azul-hover);}
               <div class="dato">Estado: <span id="card-estado">-</span></div>
               <div class="dato">Delegación: <span id="card-delegacion">-</span></div>
           </div>
+        </div>
+
+        <!-- Botones de acción al mostrar la credencial -->
+        <div id="accionesDiv" class="oculto acciones-credencial">
+            <button onclick="girarTarjeta()" class="btn-secundario">🔄 Girar</button>
+            <button onclick="reiniciarBusqueda()">Consultar Otro</button>
         </div>
 
         <div id="mensajeBusqueda" class="error-dni"></div>
@@ -111,6 +184,9 @@ async function buscarUsuario() {
     const dni = DniInput.value.trim();
     const msgBusqueda = document.getElementById("mensajeBusqueda");
     const tarjeta = document.getElementById("tarjetaAfiliado");
+    const busquedaDiv = document.getElementById("busquedaDiv");
+    const accionesDiv = document.getElementById("accionesDiv");
+    const tituloPrincipal = document.getElementById("tituloPrincipal");
     const botonBuscar = document.querySelector("#busquedaDiv button");
 
     if (!dni) {
@@ -133,7 +209,7 @@ async function buscarUsuario() {
         formData.append("dni", dni);
         const respuesta = await fetch(URL_AFILIADOS, { method: "POST", body: formData });
         const datos = await respuesta.json();
-      
+     
         if (datos.existe) {
             msgBusqueda.innerHTML = ""; 
             msgBusqueda.style.display = "none";
@@ -150,7 +226,12 @@ async function buscarUsuario() {
                 tarjeta.style.backgroundImage = `url('${URL_TARJETA_BASICO}')`;
             }
 
+            // Ocultar buscador, título y activar modo pantalla completa para la tarjeta
+            document.body.classList.add("modo-credencial");
+            tituloPrincipal.classList.add("oculto");
+            busquedaDiv.classList.add("oculto");
             tarjeta.classList.remove("oculto");
+            accionesDiv.classList.remove("oculto");
         } else {
             msgBusqueda.style.display = "block";
             msgBusqueda.innerHTML = "DNI no encontrado";
@@ -167,6 +248,22 @@ async function buscarUsuario() {
         botonBuscar.disabled = false;
         botonBuscar.innerText = "Ver Credencial";
     }
+}
+
+function girarTarjeta() {
+    const tarjeta = document.getElementById("tarjetaAfiliado");
+    tarjeta.classList.toggle("rotada");
+}
+
+function reiniciarBusqueda() {
+    document.getElementById("dni").value = "";
+    document.getElementById("tarjetaAfiliado").classList.add("oculto");
+    document.getElementById("accionesDiv").classList.add("oculto");
+    document.getElementById("tarjetaAfiliado").classList.remove("rotada");
+    document.getElementById("busquedaDiv").classList.remove("oculto");
+    document.getElementById("tituloPrincipal").classList.remove("oculto");
+    document.getElementById("mensajeBusqueda").style.display = "none";
+    document.body.classList.remove("modo-credencial");
 }
 </script>
 </body>

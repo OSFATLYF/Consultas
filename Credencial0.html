@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credencial Digital</title> 
+<!-- CSS Externos para FontAwesome -->
+<link rel="stylesheet" href="https://osfatlyf.org/wp-content/themes/doctio/assets/css/fontawesome.min.css?ver=5.13.0" media="all" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik:400,500,600,700%7CPoppins:700,500,600&display=swap" media="all" />
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body {
+    font-family: Arial, sans-serif; 
+    background: #f4f4f4; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+.contenedor{
+    width: 100%; 
+    max-width: 600px; 
+    background: #ffffff;
+    margin: 0 auto; 
+    padding: 30px; 
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+}
+h1{
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--azul-principal, #003775);
+    font-size: 1.8rem;
+}
+.seccion{margin-top:20px;}
+label{display:block;margin-bottom:8px; font-weight:bold;color:#444;}
+input,button{width:100%;padding:12px; border:1px solid #ccc;border-radius:6px; font-size:16px;}
+:root { --azul-principal: #003775; --azul-hover: #004CA3; }
+button { 
+    margin-top: 10px; 
+    background: var(--azul-principal); 
+    color: white; 
+    border: none; 
+    cursor: pointer; 
+    font-weight: bold; 
+    transition: background 0.2s ease; 
+}
+button:hover { background: var(--azul-hover);}
+.oculto{display:none !important;}
+
+.tarjeta-afiliado {
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 600 / 340; 
+    height: auto;            
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,.20);
+    margin: 20px auto 0 auto;
+}   
+
+.datos-tarjeta {position: absolute; top: 48%; left: 20px; right: 30px; color: black; font-weight: bold;}
+.dato {font-size: 16px; margin-bottom: 8px; font-family: Arial, sans-serif;}
+.error-dni {color: red; font-weight: bold; text-align: center; margin-top: 15px;}
+</style>
+</head>
+<body>
+
+    <div class="contenedor">
+        <h1>Credencial Digital</h1>
+
+        <div id="busquedaDiv" class="seccion">
+            <label for="dni">DNI del Afiliado</label>
+            <input type="text" id="dni" placeholder="Ingrese DNI" onkeydown="detectarEnter(event)">
+            <button onclick="buscarUsuario()">Ver Credencial</button>
+        </div>
+     
+        <div id="tarjetaAfiliado" class="tarjeta-afiliado oculto">
+          <div class="datos-tarjeta">
+              <div class="dato" id="card-nombre">-</div>
+              <div class="dato">Credencial: <span id="card-credencial">-</span></div>
+              <div class="dato">Plan: <span id="card-plan">-</span></div>
+              <div class="dato">Estado: <span id="card-estado">-</span></div>
+              <div class="dato">Delegación: <span id="card-delegacion">-</span></div>
+          </div>
+        </div>
+
+        <div id="mensajeBusqueda" class="error-dni"></div>
+    </div>
+
+<script>
+const URL_AFILIADOS = "https://script.google.com/macros/s/AKfycbxnC103OPZbsknMUpztQYZuQbZZTzyCkzgbO6GzkFd0FcvRxk1i8fw0yyUhxDATuLcr/exec";
+
+const URL_TARJETA_ESPECIAL = "https://raw.githubusercontent.com/OSFATLyF/Consultas/refs/heads/main/img/Especial.png";
+const URL_TARJETA_BASICO = "https://raw.githubusercontent.com/OSFATLyF/Consultas/refs/heads/main/img/Basico.png";
+
+function detectarEnter(event) {
+    if (event.key === "Enter") { 
+        event.preventDefault(); 
+        buscarUsuario();
+    }
+}
+
+async function buscarUsuario() {
+    const DniInput = document.getElementById("dni");
+    const dni = DniInput.value.trim();
+    const msgBusqueda = document.getElementById("mensajeBusqueda");
+    const tarjeta = document.getElementById("tarjetaAfiliado");
+    const botonBuscar = document.querySelector("#busquedaDiv button");
+
+    if (!dni) {
+        msgBusqueda.style.display = "block";
+        msgBusqueda.innerHTML = "Ingrese un DNI válido";
+        msgBusqueda.style.color = "red";
+        return;
+    }
+
+    msgBusqueda.style.display = "block"; 
+    msgBusqueda.innerHTML = "Buscando credencial...";
+    msgBusqueda.style.color = "var(--azul-principal)";
+    botonBuscar.disabled = true; 
+    botonBuscar.innerText = "Buscando...";
+    tarjeta.classList.add("oculto");
+
+    try {
+        const formData = new URLSearchParams();
+        formData.append("action", "buscar");
+        formData.append("dni", dni);
+        const respuesta = await fetch(URL_AFILIADOS, { method: "POST", body: formData });
+        const datos = await respuesta.json();
+      
+        if (datos.existe) {
+            msgBusqueda.innerHTML = ""; 
+            msgBusqueda.style.display = "none";
+
+            document.getElementById("card-nombre").innerText = datos.nombre.toUpperCase();
+            document.getElementById("card-credencial").innerText = datos.credencial;
+            document.getElementById("card-plan").innerText = datos.plan.toUpperCase();
+            document.getElementById("card-estado").innerText = datos.estado;
+            document.getElementById("card-delegacion").innerText = datos.telefono || "Salta";
+
+            if (datos.plan.toUpperCase() === "ESPECIAL") {
+                tarjeta.style.backgroundImage = `url('${URL_TARJETA_ESPECIAL}')`;
+            } else {
+                tarjeta.style.backgroundImage = `url('${URL_TARJETA_BASICO}')`;
+            }
+
+            tarjeta.classList.remove("oculto");
+        } else {
+            msgBusqueda.style.display = "block";
+            msgBusqueda.innerHTML = "DNI no encontrado";
+            msgBusqueda.style.color = "red";
+            tarjeta.classList.add("oculto");
+        }
+    } catch (error) {
+        console.error(error);
+        msgBusqueda.style.display = "block";
+        msgBusqueda.innerHTML = "Error al consultar datos";
+        msgBusqueda.style.color = "red";
+        tarjeta.classList.add("oculto");
+    } finally {
+        botonBuscar.disabled = false;
+        botonBuscar.innerText = "Ver Credencial";
+    }
+}
+</script>
+</body>
+</html>

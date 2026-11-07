@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Profesionales - Círculo Médico de Tartagal</title>
+    <style>
+        :root { --wd-primary-color: rgb(0,101,163); --wd-text-font: "Ubuntu", Arial, Helvetica, sans-serif; }
+        body { font-family: var(--wd-text-font); background-color: #f4f7f6; color: #777; margin: 0; padding: 0; }
+        .banner-guia { position: relative;
+            background-image: url('https://raw.githubusercontent.com/OSFATLYF/Consultas/refs/heads/main/img/img-guia-prof.png');
+            background-size: cover; background-position: center; background-repeat: no-repeat; width: 100vw;
+            height: 250px; display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
+        .banner-guia::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.1); }
+        .banner-guia h2 { position: relative; z-index: 1; font-family: var(--wd-text-font); color: #ffffff;
+            text-align: center; font-size: 38px; font-weight: 700; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        @media (max-width: 768px) {
+            .banner-guia { height: 180px; }
+            .banner-guia h2 { font-size: 26px; padding: 0 15px; } }
+        .container { width: 95%; margin: 0 auto 40px auto; background: #fff; padding: 25px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05); }
+        #medico-search-form { background: #f8f9fa; padding: 20px; border: 1px solid #e1e1e1; margin-bottom: 25px; }
+        #search-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) 120px 140px;
+            gap: 12px; align-items: center; }
+        @media (max-width: 800px) { #search-form { grid-template-columns: 1fr; } }
+        input, select { width: 100%; padding: 10px 14px; font-size: 16px; font-family: var(--wd-text-font);
+            border: 2px solid #ccc; border-radius: 0px; background-color: #fff; box-sizing: border-box; }
+        input:focus, select:focus { border-color: var(--wd-primary-color); outline: none; }
+        #BuscarProfesional { background-color: var(--wd-primary-color); color: #fff; font-weight: 500; border: none; 
+            padding: 11px 20px; cursor: pointer; height: 42px; text-transform: capitalize; font-size: 16px; }
+        #clear-button { background-color: #f7f7f7; color: #333; border: 1px solid #ccc; padding: 10px 15px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+            font-size: 16px; height: 42px; }
+        #clear-button:hover { background-color: #efefef; }
+        #clear-button img { width: 14px; height: 14px; }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e1e1e1; font-size: 16px; color: #333;}
+        th { background-color: var(--wd-primary-color); color: white; font-weight: 600; }
+        tbody tr:hover { background-color: #f9f9f9; }
+        .loading-text { text-align: center; padding: 20px; font-style: italic; color: #888; }
+        
+        /* Estilos de Paginación */
+        .pagination-container { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; }
+        .pagination-container button { padding: 8px 16px; background-color: var(--wd-primary-color); color: white; border: none; cursor: pointer; font-size: 15px; font-family: var(--wd-text-font); }
+        .pagination-container button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .pagination-container span { font-size: 15px; color: #555; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<!-- BANNER DE ANCHO COMPLETO -->
+<div class="banner-guia">
+    <h2>OSFATLYF<br>Círculo Médico de Tartagal</h2>
+</div>
+
+<div class="container">
+    <div id="medico-search-form">
+        <form id="search-form" onsubmit="return false;">
+            <input type="text" id="nombre" placeholder="Nombre del Prestador">
+            
+            <select id="especialidad">
+                <option value="">Todas las Especialidades</option>
+            </select>
+
+            <button id="BuscarProfesional" type="button">Buscar</button>
+            <button type="button" id="clear-button">
+                <img src="https://cirmedsa.com.ar/wp-content/uploads/2024/07/rotate-left.png" alt="Limpiar">
+                Limpiar
+            </button>
+        </form>
+    </div>
+
+    <div id="search-results" class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>NOMBRE</th>
+                    <th>ESPECIALIDAD</th>
+                    <th>DIRECCIÓN</th>
+                    <th>TELÉFONO</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-cuerpo">
+                <tr><td colspan="4" class="loading-text">Cargando padrón de profesionales...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- CONTENEDOR DE PAGINACIÓN -->
+    <div id="paginacion" class="pagination-container"></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const csvUrl = 'https://raw.githubusercontent.com/OSFATLYF/Consultas/refs/heads/main/csv/circulo-medico-tartagal.csv';
+        let profesionales = [];
+        let resultadosFiltrados = [];
+        let paginaActual = 1;
+        const registrosPorPagina = 25;
+
+        const form = document.getElementById('search-form');
+        const inputNombre = document.getElementById('nombre');
+        const selectEspecialidad = document.getElementById('especialidad');
+        const btnLimpiar = document.getElementById('clear-button');
+        const tablaCuerpo = document.getElementById('tabla-cuerpo');
+        const contenedorPaginacion = document.getElementById('paginacion');
+
+        function parseCSV(text) {
+            let lines = text.split('\n');
+            let result = [];
+            let headers = lines[0].split(',').map(h => h.trim());
+
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                let row = [];
+                let inComma = false;
+                let entry = '';
+                
+                for (let char of lines[i]) {
+                    if (char === '"') {
+                        inComma = !inComma;
+                    } else if (char === ',' && !inComma) {
+                        row.push(entry.trim());
+                        entry = '';
+                    } else {
+                        entry += char;
+                    }
+                }
+                row.push(entry.trim());
+                
+                if (row.length >= headers.length) {
+                    result.push({
+                        nombre: row[0] || '',
+                        especialidad: row[1] || '',
+                        direccion: row[2] || '',
+                        telefono: row[3] || ''
+                    });
+                }
+            }
+            return result;
+        }
+
+        fetch(csvUrl)
+            .then(response => response.text())
+            .then(data => {
+                profesionales = parseCSV(data);
+                resultadosFiltrados = profesionales;
+                poblarSelects();
+                actualizarVista();
+            })
+            .catch(error => {
+                console.error("Error al cargar el CSV:", error);
+                tablaCuerpo.innerHTML = `<tr><td colspan="4" class="loading-text" style="color:red;">Error al cargar los datos del padrón.</td></tr>`;
+            });
+
+        function poblarSelects() {
+            let especialidades = [...new Set(profesionales.map(p => p.especialidad))].filter(Boolean).sort();
+
+            especialidades.forEach(esp => {
+                let opt = document.createElement('option');
+                opt.value = esp;
+                opt.textContent = esp;
+                selectEspecialidad.appendChild(opt);
+            });
+        }
+
+        function actualizarVista() {
+            if (resultadosFiltrados.length === 0) {
+                tablaCuerpo.innerHTML = `<tr><td colspan="4" class="loading-text">No se encontraron profesionales con los filtros seleccionados.</td></tr>`;
+                contenedorPaginacion.innerHTML = '';
+                return;
+            }
+
+            // Calcular índices de paginación
+            const totalPaginas = Math.ceil(resultadosFiltrados.length / registrosPorPagina);
+            if (paginaActual > totalPaginas) paginaActual = totalPaginas;
+            if (paginaActual < 1) paginaActual = 1;
+
+            const inicio = (paginaActual - 1) * registrosPorPagina;
+            const fin = inicio + registrosPorPagina;
+            const registrosPaginaActual = resultadosFiltrados.slice(inicio, fin);
+
+            // Renderizar filas
+            let html = '';
+            registrosPaginaActual.forEach(p => {
+                html += `<tr>
+                    <td data-label="NOMBRE">${p.nombre}</td>
+                    <td data-label="ESPECIALIDAD">${p.especialidad}</td>
+                    <td data-label="DIRECCIÓN">${p.direccion}</td>
+                    <td data-label="TELÉFONO">${p.telefono}</td>
+                </tr>`;
+            });
+            tablaCuerpo.innerHTML = html;
+
+            // Renderizar controles de paginación
+            let paginacionHtml = `
+                <button id="btn-anterior" ${paginaActual === 1 ? 'disabled' : ''}>Anterior</button>
+                <span>Página ${paginaActual} de ${totalPaginas} (${resultadosFiltrados.length} resultados)</span>
+                <button id="btn-siguiente" ${paginaActual === totalPaginas ? 'disabled' : ''}>Siguiente</button>
+            `;
+            contenedorPaginacion.innerHTML = paginacionHtml;
+
+            // Eventos de botones de paginación
+            const btnAnterior = document.getElementById('btn-anterior');
+            const btnSiguiente = document.getElementById('btn-siguiente');
+
+            if (btnAnterior) {
+                btnAnterior.addEventListener('click', () => {
+                    if (paginaActual > 1) {
+                        paginaActual--;
+                        actualizarVista();
+                        window.scrollTo({ top: 300, behavior: 'smooth' });
+                    }
+                });
+            }
+
+            if (btnSiguiente) {
+                btnSiguiente.addEventListener('click', () => {
+                    if (paginaActual < totalPaginas) {
+                        paginaActual++;
+                        actualizarVista();
+                        window.scrollTo({ top: 300, behavior: 'smooth' });
+                    }
+                });
+            }
+        }
+
+        function filtrar() {
+            const nom = inputNombre.value.toLowerCase().trim();
+            const esp = selectEspecialidad.value.toLowerCase();
+
+            resultadosFiltrados = profesionales.filter(p => {
+                let coincideNombre = p.nombre.toLowerCase().includes(nom);
+                let coincideEspecialidad = esp === "" || p.especialidad.toLowerCase() === esp;
+                return coincideNombre && coincideEspecialidad;
+            });
+
+            paginaActual = 1; // Reiniciar a la primera página al filtrar
+            actualizarVista();
+        }
+
+        inputNombre.addEventListener('input', filtrar);
+        selectEspecialidad.addEventListener('change', filtrar);
+
+        btnLimpiar.addEventListener('click', () => {
+            form.reset();
+            resultadosFiltrados = profesionales;
+            paginaActual = 1;
+            actualizarVista();
+        });
+    });
+</script>
+
+</body>
+</html>
